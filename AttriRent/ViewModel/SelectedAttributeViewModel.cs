@@ -18,10 +18,21 @@ namespace AttriRent.ViewModel
     {
         private int _id;
         private bool _isRentEnable = true;
+        private string? _imagePath { get; set; }
         public int Id { get { return _id; } }
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public string Price { get; set; } 
+        public string Price { get; set; }
+        public string ImagePath
+        {
+            get
+            {
+                if (_imagePath != null)
+                    return _imagePath;
+                else
+                    return "/LocalImages/DefaultImage.jpg";
+            }
+        }
         public bool IsRentEnable 
         {
             get { return _isRentEnable; }
@@ -47,6 +58,7 @@ namespace AttriRent.ViewModel
                     Name = atr.name;
                     Description = atr.description;
                     Price = atr.price.ToString();
+                    _imagePath = atr.image_path;
                 }
             }
         }

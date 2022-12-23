@@ -12,6 +12,8 @@ namespace AttriRent.Models
         public int price { get; set; }
         [MaxLength(200)]
         public string? description { get; set; }
+        [MaxLength(500)]
+        public string? image_path { get; set; }
 
         public List<Order>? orders { get; set; }
     }

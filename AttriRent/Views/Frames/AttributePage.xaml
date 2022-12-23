@@ -13,18 +13,29 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Height="160" VerticalAlignment="Center">
-            <StackPanel VerticalAlignment="Center" Margin="0,0,0,10">
-                <Rectangle Fill="Gray" Width="150" Height="150"/>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Image Source="{Binding ImagePath}"  Width="300" Height="200"/>
             </StackPanel>
-            <StackPanel>
-                <TextBlock Text="{Binding Name}"/>
-                <TextBlock Text="{Binding Description, TargetNullValue=No description for this attribute}"/>
-                <TextBlock Text="{Binding Price}"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                    <TextBlock Text="Name: " FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="Description: " FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="Price: " FontWeight="Bold" FontSize="16"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}"  FontSize="16"/>
+                    <TextBlock Text="{Binding Description, TargetNullValue=No description for this attribute}"  FontSize="16"/>
+                    <TextBlock Text="{Binding Price}"  FontSize="16"/>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center">
-            <Button Content="GetRent" Height="30" Width="80" Command="{Binding GetRentCommand}" IsEnabled="{Binding IsRentEnable}" />
+        </Grid>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="GetRent" Height="80" Width="150" FontSize="24" Command="{Binding GetRentCommand}" IsEnabled="{Binding IsRentEnable}" />
         </StackPanel>
     </Grid>
 </Page>

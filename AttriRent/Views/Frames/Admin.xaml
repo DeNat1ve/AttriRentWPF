@@ -3,12 +3,55 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:AttriRent.Views.Frames"
+      xmlns:local="clr-namespace:AttriRent.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Admin">
 
-    <Grid>
-        <Label Content="Admin"/>
+    <Page.DataContext>
+        <local:AdminViewModel/>
+    </Page.DataContext>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="10,0">
+            <Label Content="Add new attribute:" FontSize="18"/>
+            <Label Content="{Binding AddSuccessMessage}" Foreground="LightGreen"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                    <Label Content="Name:"/>
+                    <TextBox Text="{Binding Name}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                    <Label Content="Price:"/>
+                    <TextBox Text="{Binding Price}"/>
+                </StackPanel>
+            </Grid>
+            <Label Content="Description:"/>
+            <TextBox Text="{Binding Description}"/>
+            <Label Content="Image Path:"/>
+            <TextBox Text="{Binding ImagePath}"/>
+            <Button Content="Add" Margin="0,5" Command="{Binding AddCommand}"/>
+            <TextBlock Text="{Binding AddErrorMessage}" Foreground="OrangeRed"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="10,0">
+            <Label Content="Delete attribute:" FontSize="18"/>
+            <Label Content="{Binding DeleteSuccessMessage}" Foreground="LightGreen"/>
+            <Label Content="Attribute Name or Id:"/>
+            <TextBox Text="{Binding NameOrId}"/>
+            <Button Content="Delete" Margin="0,5" Command="{Binding DeleteCommand}"/>
+            <TextBlock Text="{Binding DeleteErrorMessage}" Foreground="OrangeRed"/>
+        </StackPanel>
     </Grid>
 </Page>

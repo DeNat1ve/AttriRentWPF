@@ -8,14 +8,24 @@ namespace ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        private string _errorMessage = string.Empty;
+        protected string _message = string.Empty;
         public string ErrorMessage
         {
-            get { return _errorMessage; }
+            get { return _message; }
             set
             {
-                _errorMessage = value;
+                _message = value;
                 OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        public string SuccessMessage
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                OnPropertyChanged(nameof(SuccessMessage));
             }
         }
 

@@ -14,16 +14,27 @@
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel>
-            <Label Content="Change password" FontSize="24" Padding="0"/>
-            <Label FontSize="20" Content="Current password:" Margin="0,10,0,5"/>
-            <TextBox FontSize="20" Text="{Binding CurrentPassword}"/>
+        <StackPanel Margin="10,0">
+            <Label Content="Change password" FontSize="24" Padding="0" HorizontalAlignment="Center"/>
+            <Label Content="{Binding PasswordSuccessMessage}" Foreground="LightGreen" FontSize="18" HorizontalContentAlignment="Center"/>
             <Label FontSize="20" Content="New password:" Margin="0,10,0,5"/>
             <TextBox FontSize="20" Text="{Binding NewPassword}"/>
+            <Label FontSize="20" Content="Current password:" Margin="0,0,0,5"/>
+            <TextBox FontSize="20" Text="{Binding CurrentPassword}"/>
             <Button Content="Change password" Width="150" Margin="0,20,0,0" FontSize="16" Padding="5" Command="{Binding ChangePasswordCommand}"/>
-            <Label Content="{Binding ErrorMessage}" Foreground="OrangeRed" FontSize="18" HorizontalContentAlignment="Center"/>
+            <Label Content="{Binding PasswordErrorMessage}" Foreground="OrangeRed" FontSize="18" HorizontalContentAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Margin="10,0" Grid.Column="1">
+            <Label Content="Change Name" FontSize="24" Padding="0" HorizontalAlignment="Center"/>
+            <Label Content="{Binding NameSuccessMessage}" Foreground="LightGreen" FontSize="18" HorizontalContentAlignment="Center"/>
+            <Label FontSize="20" Content="New name:" Margin="0,10,0,5"/>
+            <TextBox FontSize="20" Text="{Binding NewName}"/>
+            <Label FontSize="20" Content="Current password:" Margin="0,0,0,5"/>
+            <TextBox FontSize="20" Text="{Binding CurrentPassword}"/>
+            <Button Content="Change name" Width="150" Margin="0,20,0,0" FontSize="16" Padding="5" Command="{Binding ChangeNameCommand}"/>
+            <Label Content="{Binding NameErrorMessage}" Foreground="OrangeRed" FontSize="18" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Page>
