@@ -4,16 +4,11 @@ using AttriRent.Enums;
 using AttriRent.Models;
 using AttriRent.ViewModel.Navigation;
 using AttriRent.Views.Frames;
+using AttriRent.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using ViewModels;
+using System.Text.RegularExpressions;
 
 namespace AttriRent.ViewModel
 {
@@ -43,8 +38,6 @@ namespace AttriRent.ViewModel
                             ApplicationInfo.ShowNavbar();
                             ApplicationInfo.SetNewPage(new Account(), nameof(Account));
                         }
-                        else
-                            ErrorMessage = "Incorrect login or password!";
                     }));
             }
         }
@@ -61,8 +54,6 @@ namespace AttriRent.ViewModel
                             _db.Dispose();
                             ApplicationInfo.SetNewPage(new Login(), nameof(Views.Frames.Login));
                         }
-                        else
-                            ErrorMessage = "User exists";
                     }));
             }
         }
@@ -89,11 +80,18 @@ namespace AttriRent.ViewModel
         }
         private bool Login()
         {
-            if (_db.users.FirstOrDefault(u => (u.email == UserLogin || u.name == UserLogin) && u.password == UserPassword) is User user)
+            if (!IsDataValid(true)) return false;
+
+            HashServise hs = new HashServise(); 
+
+            if (_db.users.Include(r => r.user_role).Include(p => p.user_password).FirstOrDefault(u => (u.email == UserLogin || u.name == UserLogin)) is User user)
             {
-                ApplicationInfo.UserId = user.id;
-                ApplicationInfo.ShowAdminPanelButton((Roles)user.user_role);
-                return true;
+                if (hs.VerifyHashedPassword(user.user_password.password, UserPassword))
+                {
+                    ApplicationInfo.UserId = user.id;
+                    ApplicationInfo.ShowAdminPanelButton((Roles)user.user_role.role);
+                    return true;
+                }
             }
 
             return false;
@@ -101,6 +99,10 @@ namespace AttriRent.ViewModel
 
         private bool Register()
         {
+            if(!IsDataValid()) return false;
+
+            HashServise hs = new HashServise();
+
             if(_db.users.FirstOrDefault(u => u.email == UserEmail || u.name == UserLogin ) is null)
             {
                 var user = 
@@ -108,15 +110,57 @@ namespace AttriRent.ViewModel
                     {
                         email = UserEmail,
                         name = UserLogin,
-                        password = UserPassword,
-                        user_role = 1
                     };
+
+                user.user_password = new UserPassword() { password = hs.HashPassword(UserPassword), user = user };
+                user.user_role = new UserRole() { role = 1, user = user };
                 _db.users.Add(user);
                 _db.SaveChanges();
                 return true;
             }
+            else
+            {
+                ErrorMessage = "User exists";
+                return false;
+            }
+        }
 
-            return false;
+        private bool IsDataValid(bool isLogin = false)
+        {
+            ErrorMessage = string.Empty;
+
+            if (!isLogin && string.IsNullOrWhiteSpace(UserEmail))
+            {
+                ErrorMessage = "Email field is empty";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(UserLogin))
+            {
+                ErrorMessage = "Login field is empty";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(UserPassword))
+            {
+                ErrorMessage = "Password field is empty";
+                return false;
+            }
+
+            if (double.TryParse(UserLogin, out double _))
+            {
+                ErrorMessage = "Login cannot be a number";
+                return false;
+            }
+
+            Regex reg = new Regex("^\\w+@{1}\\w+\\.{1}\\w+$");
+            if(!isLogin && !reg.IsMatch(UserEmail))
+            {
+                ErrorMessage = "Incorrect email";
+                return false;
+            }
+
+            return true;
         }
     }
 }

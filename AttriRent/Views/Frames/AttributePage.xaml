@@ -36,6 +36,13 @@
         </Grid>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Content="GetRent" Height="80" Width="150" FontSize="24" Command="{Binding GetRentCommand}" IsEnabled="{Binding IsRentEnable}" />
+            <ComboBox SelectedIndex="{Binding Index, Mode=TwoWay}">
+                <ComboBoxItem Content="1 day"/>
+                <ComboBoxItem Content="3 days"/>
+                <ComboBoxItem Content="5 days"/>
+                <ComboBoxItem Content="7 days"/>
+                <ComboBoxItem Content="14 days"/>
+            </ComboBox>
         </StackPanel>
     </Grid>
 </Page>

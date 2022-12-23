@@ -1,6 +1,7 @@
 ﻿using AttriRent.Commands.BaseCommand;
 using AttriRent.DAL;
 using AttriRent.Models;
+using AttriRent.Services;
 using AttriRent.ViewModel.Navigation;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,40 +21,44 @@ namespace AttriRent.ViewModel
         public string NewPassword { get; set; } = string.Empty;
         public string NewName { get; set; } = string.Empty;
 
+        private string _passwordErrorMessage = string.Empty;
+        private string _passwordSuccessMessage = string.Empty;
         public string PasswordErrorMessage
         {
-            get { return _message; }
+            get { return _passwordErrorMessage; }
             set
             {
-                _message = value;
+                _passwordErrorMessage = value;
                 OnPropertyChanged(nameof(PasswordErrorMessage));
             }
         }
         public string PasswordSuccessMessage
         {
-            get { return _message; }
+            get { return _passwordSuccessMessage; }
             set
             {
-                _message = value;
+                _passwordSuccessMessage = value;
                 OnPropertyChanged(nameof(PasswordSuccessMessage));
             }
         }
 
+        private string _nameErrorMessage = string.Empty;
+        private string _nameSuccessMessage = string.Empty;
         public string NameErrorMessage
         {
-            get { return _message; }
+            get { return _nameErrorMessage; }
             set
             {
-                _message = value;
+                _nameErrorMessage = value;
                 OnPropertyChanged(nameof(NameErrorMessage));
             }
         }
         public string NameSuccessMessage
         {
-            get { return _message; }
+            get { return _nameSuccessMessage; }
             set
             {
-                _message = value;
+                _nameSuccessMessage = value;
                 OnPropertyChanged(nameof(NameSuccessMessage));
             }
         }
@@ -90,16 +95,18 @@ namespace AttriRent.ViewModel
 
         private async Task ChangePasswordAsync()
         {
+            HashServise hs = new HashServise();
+
             PasswordErrorMessage = string.Empty;
             PasswordSuccessMessage = string.Empty;
 
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
-                if (await db.users.FirstOrDefaultAsync(u => u.id == ApplicationInfo.UserId) is User user)
-                    if (user.password == CurrentPassword)
+                if (await db.users.Include(p => p.user_password).FirstOrDefaultAsync(u => u.id == ApplicationInfo.UserId) is User user)
+                    if (hs.VerifyHashedPassword(user.user_password.password, CurrentPassword))
                     {
                         PasswordSuccessMessage = "Password was change";
-                        user.password = NewPassword;
+                        user.user_password.password = NewPassword;
                         await db.SaveChangesAsync();
                     }
                     else
@@ -109,13 +116,15 @@ namespace AttriRent.ViewModel
 
         private async Task ChangeNameAsync()
         {
+            HashServise hs = new HashServise();
+
             NameErrorMessage = string.Empty;
             NameSuccessMessage = string.Empty;
 
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
-                if (await db.users.FirstOrDefaultAsync(u => u.id == ApplicationInfo.UserId) is User user)
-                    if (user.password == CurrentPassword)
+                if (await db.users.Include(p => p.user_password).FirstOrDefaultAsync(u => u.id == ApplicationInfo.UserId) is User user)
+                    if (hs.VerifyHashedPassword(user.user_password.password, CurrentPassword))
                     {
                         NameSuccessMessage = "Name was change";
                         user.name = NewName;

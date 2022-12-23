@@ -4,6 +4,7 @@ using AttriRent.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttriRent.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221223105823_InitSqlServer")]
+    partial class InitSqlServer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +108,19 @@ namespace AttriRent.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("password_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("role_id")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("password_id")
+                        .IsUnique();
+
+                    b.HasIndex("role_id")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });
@@ -122,13 +137,7 @@ namespace AttriRent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
-
-                    b.HasIndex("user_id")
-                        .IsUnique();
 
                     b.ToTable("user_password");
                 });
@@ -144,13 +153,7 @@ namespace AttriRent.Migrations
                     b.Property<int>("role")
                         .HasColumnType("int");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
-
-                    b.HasIndex("user_id")
-                        .IsUnique();
 
                     b.ToTable("user_role");
                 });
@@ -174,26 +177,23 @@ namespace AttriRent.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AttriRent.Models.UserPassword", b =>
+            modelBuilder.Entity("AttriRent.Models.User", b =>
                 {
-                    b.HasOne("AttriRent.Models.User", "user")
-                        .WithOne("user_password")
-                        .HasForeignKey("AttriRent.Models.UserPassword", "user_id")
+                    b.HasOne("AttriRent.Models.UserPassword", "user_password")
+                        .WithOne("user")
+                        .HasForeignKey("AttriRent.Models.User", "password_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("AttriRent.Models.UserRole", b =>
-                {
-                    b.HasOne("AttriRent.Models.User", "user")
-                        .WithOne("user_role")
-                        .HasForeignKey("AttriRent.Models.UserRole", "user_id")
+                    b.HasOne("AttriRent.Models.UserRole", "user_role")
+                        .WithOne("user")
+                        .HasForeignKey("AttriRent.Models.User", "role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
+                    b.Navigation("user_password");
+
+                    b.Navigation("user_role");
                 });
 
             modelBuilder.Entity("AttriRent.Models.Attribute", b =>
@@ -204,11 +204,17 @@ namespace AttriRent.Migrations
             modelBuilder.Entity("AttriRent.Models.User", b =>
                 {
                     b.Navigation("orders");
+                });
 
-                    b.Navigation("user_password")
+            modelBuilder.Entity("AttriRent.Models.UserPassword", b =>
+                {
+                    b.Navigation("user")
                         .IsRequired();
+                });
 
-                    b.Navigation("user_role")
+            modelBuilder.Entity("AttriRent.Models.UserRole", b =>
+                {
+                    b.Navigation("user")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

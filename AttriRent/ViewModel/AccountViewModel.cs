@@ -78,11 +78,11 @@ namespace AttriRent.ViewModel
         {
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
-                if (db.users.FirstOrDefault(u => u.id == ApplicationInfo.UserId) is User user)
+                if (db.users.Include(r => r.user_role).FirstOrDefault(u => u.id == ApplicationInfo.UserId) is User user)
                 {
                     UserName = user.name;
                     UserEmail = user.email;
-                    UserRole = ((Roles)user.user_role).ToString();
+                    UserRole = ((Roles)user.user_role.role).ToString();
                 }
 
                 if (db.orders.Include(o => o.Attribute).Where(o => o.User.id == ApplicationInfo.UserId).ToList() is List<Order> orders)

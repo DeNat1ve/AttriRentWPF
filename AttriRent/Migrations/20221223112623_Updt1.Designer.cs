@@ -4,6 +4,7 @@ using AttriRent.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttriRent.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221223112623_Updt1")]
+    partial class Updt1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,12 +125,12 @@ namespace AttriRent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("user_id")
+                    b.Property<int>("u_id")
                         .HasColumnType("int");
 
                     b.HasKey("id");
 
-                    b.HasIndex("user_id")
+                    b.HasIndex("u_id")
                         .IsUnique();
 
                     b.ToTable("user_password");
@@ -144,12 +147,12 @@ namespace AttriRent.Migrations
                     b.Property<int>("role")
                         .HasColumnType("int");
 
-                    b.Property<int>("user_id")
+                    b.Property<int>("u_id")
                         .HasColumnType("int");
 
                     b.HasKey("id");
 
-                    b.HasIndex("user_id")
+                    b.HasIndex("u_id")
                         .IsUnique();
 
                     b.ToTable("user_role");
@@ -178,7 +181,7 @@ namespace AttriRent.Migrations
                 {
                     b.HasOne("AttriRent.Models.User", "user")
                         .WithOne("user_password")
-                        .HasForeignKey("AttriRent.Models.UserPassword", "user_id")
+                        .HasForeignKey("AttriRent.Models.UserPassword", "u_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -189,7 +192,7 @@ namespace AttriRent.Migrations
                 {
                     b.HasOne("AttriRent.Models.User", "user")
                         .WithOne("user_role")
-                        .HasForeignKey("AttriRent.Models.UserRole", "user_id")
+                        .HasForeignKey("AttriRent.Models.UserRole", "u_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

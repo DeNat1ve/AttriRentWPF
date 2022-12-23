@@ -13,13 +13,16 @@ namespace AttriRent.DAL
         public DbSet<User> users { get; set; }
         public DbSet<Order> orders { get; set; }
         public DbSet<Models.Attribute> attributes { get; set; }
+        public DbSet<UserPassword> passwords { get; set; }
+        public DbSet<UserRole> roles { get; set; }
 
         public ApplicationDbContext()
         {
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("User Id=postgres;Password=12345;Host=localhost;Port=5433;Database=AttriRent");
+            //optionsBuilder.UseNpgsql("User Id=postgres;Password=12345;Host=localhost;Port=5432;Database=AttriRent");
+            optionsBuilder.UseSqlServer("Server=LAPTOP-93JTFBM2;Database=AttriRent;Trusted_Connection=True;TrustServerCertificate=True");
         }
     }
 }
