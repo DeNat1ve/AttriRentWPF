@@ -92,6 +92,16 @@ namespace AttriRent.ViewModel
                     ApplicationInfo.ShowAdminPanelButton((Roles)user.user_role.role);
                     return true;
                 }
+                else
+                {
+                    ErrorMessage = "Incorrect password!";
+                    return false;
+                }
+            }
+            else
+            {
+                ErrorMessage = "Incorrect login!";
+                return false;
             }
 
             return false;

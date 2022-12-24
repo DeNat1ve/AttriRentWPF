@@ -22,7 +22,7 @@ namespace AttriRent.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseNpgsql("User Id=postgres;Password=12345;Host=localhost;Port=5432;Database=AttriRent");
-            optionsBuilder.UseSqlServer("Server=LAPTOP-93JTFBM2;Database=AttriRent;Trusted_Connection=True;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=USER-PC\\MSSQLSERVER01;Database=AttriRent;Trusted_Connection=True;TrustServerCertificate=True");
         }
     }
 }

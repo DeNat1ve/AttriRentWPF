@@ -105,9 +105,12 @@ namespace AttriRent.ViewModel
                 if (await db.users.Include(p => p.user_password).FirstOrDefaultAsync(u => u.id == ApplicationInfo.UserId) is User user)
                     if (hs.VerifyHashedPassword(user.user_password.password, CurrentPassword))
                     {
-                        PasswordSuccessMessage = "Password was change";
-                        user.user_password.password = NewPassword;
-                        await db.SaveChangesAsync();
+                        if (IsDataValid())
+                        {
+                            PasswordSuccessMessage = "Password was change";
+                            user.user_password.password = hs.HashPassword(NewPassword);
+                            await db.SaveChangesAsync();
+                        }
                     }
                     else
                         PasswordErrorMessage = "Incorrect password!";
@@ -126,13 +129,53 @@ namespace AttriRent.ViewModel
                 if (await db.users.Include(p => p.user_password).FirstOrDefaultAsync(u => u.id == ApplicationInfo.UserId) is User user)
                     if (hs.VerifyHashedPassword(user.user_password.password, CurrentPassword))
                     {
-                        NameSuccessMessage = "Name was change";
-                        user.name = NewName;
-                        await db.SaveChangesAsync();
+                        if (IsDataValid(true))
+                        {
+                            NameSuccessMessage = "Name was change";
+                            user.name = NewName;
+                            await db.SaveChangesAsync();
+                        }
                     }
                     else
                         NameErrorMessage = "Incorrect password!";
             }
+        }
+
+        private bool IsDataValid(bool verifName = false)
+        {
+            NameErrorMessage = string.Empty;
+            
+            if (verifName)
+            {
+                if (string.IsNullOrWhiteSpace(NewName))
+                {
+                    NameErrorMessage = "Name field is empty!";
+                    return false;
+                }
+
+
+                if (double.TryParse(NewName, out double _))
+                {
+                    NameErrorMessage = "Login cannot be a number!";
+                    return false;
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(NewPassword))
+                {
+                    NameErrorMessage = "New password field is empty!";
+                    return false;
+                }
+            }
+
+            if(string.IsNullOrEmpty(CurrentPassword))
+            {
+                NameErrorMessage = "Current password field is empty!";
+                return false;
+            }
+
+            return true;
         }
     }
 }
